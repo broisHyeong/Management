@@ -129,8 +129,6 @@ async function main() {
   }
 
   await wait(1000);
-  connection.end();
-  process.exit();
 } //main end
 
 const wait = (timeToDelay) =>
