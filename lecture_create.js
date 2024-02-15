@@ -126,30 +126,6 @@ function getMajorList() {
     });
 }
 
-//강의정보생성
-// async function addLectureToDatabase(){
-//     let id = await lecture_id();
-//     let name = await lecture_name();
-//     let day = await lecture_day();
-//     let time = await lecture_time();
-//     let credit = await lecture_credit();
-//     let p_id = await lecture_professorid();
-//     let type = await lecture_type();
-//     let m_id = await lecture_majorid
-
-
-//     let sql = 'INSERT INTO lecture(lecture_id, lecture_name, lecture_day, lecture_time, lecture_credit, lecture_professorid, lecture_type, lecture_majorid) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
-//     connection.query(sql, [id, name, day, time, credit, p_id, type, m_id],(error, results) =>{
-//         if(error){
-//             console.error('Error inserting professor :', error);
-//         }else{
-//             console.log('Lecture information inserted successfully.')
-//         }
-//         });
-// }
-
-// addLectureToDatabase();
-
 async function addLectureToDatabase() {
     try {
         let id = await lecture_id();
