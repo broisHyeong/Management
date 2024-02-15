@@ -7,7 +7,7 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-rl.question('삭제할 교수 번호 입력: ', (professorId) => {
+rl.question('삭제할 강의 번호 입력: ', (lectureId) => {
   // MySQL 연결
     const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -20,7 +20,7 @@ rl.question('삭제할 교수 번호 입력: ', (professorId) => {
 connection.connect();
 
   // SQL 쿼리 생성
-const sql = `DELETE FROM professor WHERE professor_id = ${professorId}`;
+const sql = `DELETE FROM lecture WHERE lecture_id = ${lectureId}`;
 
   // 쿼리 실행
 connection.query(sql, (err, result) => {
@@ -41,5 +41,3 @@ connection.query(sql, (err, result) => {
     rl.close();
     });
 });
-
-// module.exports = deleteData;
