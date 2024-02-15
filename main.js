@@ -1,6 +1,10 @@
 const Input = require("./userInput");
 let mysql = require("mysql");
 let read = require("./read");
+let lectureUpdate = require("./lecture_update");
+let studentUpdate = require("./student_update");
+let professorUpdate = require("./professor_update");
+let findStudent = require("./apply");
 
 let korTable = ["학생", "강의", "교수"];
 let engTable = ["student", "lecture", "professor"];
@@ -30,6 +34,11 @@ async function main() {
         console.clear();
         if (table == "1" || table == "2" || table == "3") {
           while (true) {
+            // await printPrompt(
+            //   `* ${
+            //     korTable[table - 1]
+            //   }관리 *  ---1.추가하기 2.검색하기 3.확인하기 4.수정하기 5.삭제하기 6.뒤로가기`
+            // );
             console.log(
               `* ${
                 korTable[table - 1]
@@ -52,11 +61,12 @@ async function main() {
               let readCondition = await Input.getUserInput();
               await read.list(engTable[table - 1], readCondition);
             } else if (funct == "4") {
-              //수정하기
-              console.log(`수정할 ${korTable[table - 1]}번호를 입력해주세요`);
-              let updateId = await Input.getUserInput();
-              // update();
-              console.log("update done");
+              //console.log(`수정할 ${korTable[table - 1]}번호를 입력해주세요`);
+              //let updateId = await Input.getUserInput();
+              if (table == "1") await studentUpdate.main();
+              else if (table == "2") await lectureUpdate.main();
+              else if (table == "3") await professorUpdate.main();
+              else console.log("error");
             } else if (funct == "5") {
               //삭제하기
               console.log(`삭제할 ${korTable[table - 1]}번호를 입력해주세요`);
@@ -87,18 +97,16 @@ async function main() {
     } // user == 1
     else if (user == 2) {
       console.log(`수강신청을 위한 학번을 입력하십시오`);
-      //while (true) {
-      let studentId = await Input.getUserInput();
-      // let studentName = findStudentName(studentId);
-      // if (studentName){
-      //  console.log(`반갑습니다 ${studentName}님`);
-      //  break;
-      //  }
-      // else{
-      //  console.log(`학번을 다시 한 번 확인해주십시오`);
-      //
-      // }
-      //}
+      while (true) {
+        let studentId = await Input.getUserInput();
+        let studentName = await findStudent.findStudentName(studentId);
+        if (studentName) {
+          console.log(`반갑습니다 ${studentName}님`);
+          break;
+        } else {
+          console.log(`학번을 다시 한 번 확인해주십시오`);
+        }
+      }
       while (true) {
         console.log(
           `1.수강신청하기 2.수강취소하기 3.수강내역 확인하기 4.뒤로가기`
@@ -138,5 +146,12 @@ main();
 
 const wait = (timeToDelay) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
+
+function printPrompt(msg) {
+  return new Promise((resolve) => {
+    console.log(msg);
+    resolve(msg);
+  });
+}
 
 module.exports = { main, connection };
