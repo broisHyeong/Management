@@ -4,4 +4,5 @@ package-lock.json
 package.json
 .env
 userInput.js
-connect.j
+connect.js
+.gitignore
