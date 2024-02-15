@@ -8,8 +8,6 @@ let findStudent = require("./apply");
 
 let korTable = ["학생", "강의", "교수"];
 let engTable = ["student", "lecture", "professor"];
-//let korFunction = ["추가하기", "검색하기", "확인하기", "수정하기", "삭제하기"];
-//let engFunction = ["create", "search", "read", "update", "delete"];
 
 let connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -34,17 +32,12 @@ async function main() {
         console.clear();
         if (table == "1" || table == "2" || table == "3") {
           while (true) {
-            // await printPrompt(
-            //   `* ${
-            //     korTable[table - 1]
-            //   }관리 *  ---1.추가하기 2.검색하기 3.확인하기 4.수정하기 5.삭제하기 6.뒤로가기`
-            // );
             console.log(
               `* ${
                 korTable[table - 1]
               }관리 *  1.추가하기 2.검색하기 3.확인하기 4.수정하기 5.삭제하기 6.뒤로가기`
             );
-            let funct = await Input.getUserInput(); //사용할 함수
+            let funct = await Input.getUserInput(); //사용할 기능
             if (funct == "1") {
               //추가하기
               //create();
@@ -53,7 +46,7 @@ async function main() {
               //검색하기
               console.log(`검색할 ${korTable[table - 1]}번호를 입력해주세요`);
               let listId = await Input.getUserInput();
-              console.log("*학생정보*");
+              console.log("* 학생정보 *");
               await read.search(engTable[table - 1], listId);
             } else if (funct == "3") {
               //확인하기
@@ -61,8 +54,7 @@ async function main() {
               let readCondition = await Input.getUserInput();
               await read.list(engTable[table - 1], readCondition);
             } else if (funct == "4") {
-              //console.log(`수정할 ${korTable[table - 1]}번호를 입력해주세요`);
-              //let updateId = await Input.getUserInput();
+              //업데이트하기
               if (table == "1") await studentUpdate.main();
               else if (table == "2") await lectureUpdate.main();
               else if (table == "3") await professorUpdate.main();
@@ -146,12 +138,5 @@ main();
 
 const wait = (timeToDelay) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
-
-function printPrompt(msg) {
-  return new Promise((resolve) => {
-    console.log(msg);
-    resolve(msg);
-  });
-}
 
 module.exports = { main, connection };
