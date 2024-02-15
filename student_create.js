@@ -110,7 +110,7 @@ async function addStudentToDatabase(){
     let status = await student_status();
     let number = await student_number();
 
-    let sql = `INSERT INTO student(student_id, major_id, student_grade, student_name, student_sex, student_address, student_status, student_number, student_college, completed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, false)`;
+    let sql = `INSERT INTO student(student_id, major_id, student_grade, student_name, student_sex, student_address, student_status, student_number, student_college) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     connection.query(sql,[s_id, m_id.major_id, grade, name, sex, address, status, number, m_id.college], (error, results) =>{
         if(error){
             console.error('Error inserting student :', error);

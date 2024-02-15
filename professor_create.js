@@ -75,7 +75,7 @@ async function addProfessorToDatabase(){
     let tel = await professor_tel();
     let major = await professor_major();
 
-    let sql = 'INSERT INTO professor(professor_id, professor_name, professor_tel, professor_major, completed) VALUES(?, ?, ?, ?, false)';
+    let sql = 'INSERT INTO professor(professor_id, professor_name, professor_tel, professor_major) VALUES(?, ?, ?, ?)';
     connection.query(sql, [id, name, tel, major],(error, results) =>{
         if(error){
             console.error('Error inserting professor :', error);
