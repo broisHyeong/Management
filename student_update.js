@@ -53,7 +53,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_grade = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_grade, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('학년이 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 학년이 ${student_grade}학년으로 수정되었습니다`);
       });
@@ -66,7 +66,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_name = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_name, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('이름이 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 이름이 ${student_name}으로 수정되었습니다`);
       });
@@ -79,7 +79,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_sex = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_sex, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('성별이 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 성별이 ${student_sex}(으)로 수정되었습니다`);
       });
@@ -92,7 +92,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_address = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_address, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('주소가 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 주소가 ${student_address}(으)로 수정되었습니다`);
       });
@@ -105,7 +105,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_status = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_status, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('학적상태가 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 학적상태가 ${student_status}으로 수정되었습니다`);
       });
@@ -118,7 +118,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_number = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_number, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('연락처가 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 연락처가 ${student_number}으로 수정되었습니다`);
       });
@@ -131,7 +131,7 @@ if (!exist) {
       updatesql = `UPDATE student SET student_college = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_college, student_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('단과대학이 올바르게 입력되지 않았습니다');
         }
         console.log(`학번 ${student_id}의 단과대학이 ${student_college}으로 수정되었습니다`);
       });

@@ -53,7 +53,7 @@ if (!exist) {
       updatesql = `UPDATE professor SET professor_name = ? WHERE professor_id = ?`;
       connection.query(updatesql, [professor_name, professor_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('이름이 올바르게 입력되지 않았습니다');
         }
         console.log(`교수번호 ${professor_id}의 이름이 ${professor_name}으로 수정되었습니다`);
       });
@@ -66,7 +66,7 @@ if (!exist) {
       updatesql = `UPDATE professor SET professor_tel = ? WHERE professor_id = ?`;
       connection.query(updatesql, [professor_tel, professor_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('연락처가 올바르게 입력되지 않았습니다');
         }
         console.log(`교수번호 ${professor_id}의 연락처가 ${professor_tel}으로 수정되었습니다`);
       });
@@ -79,7 +79,7 @@ if (!exist) {
       updatesql = `UPDATE professor SET professor_major = ? WHERE professor_id = ?`;
       connection.query(updatesql, [professor_major, professor_id], (err) => {
         if (err) {
-          console.log(err.message);
+          console.log('학과가 올바르게 입력되지 않았습니다');
         }
         console.log(`교수번호 ${professor_id}의 학과가 ${professor_major}으로 수정되었습니다`);
       });
