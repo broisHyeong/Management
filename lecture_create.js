@@ -169,4 +169,4 @@ function main() {
     });
 }
 
-module.exports = { main };
+module.exports = { addLectureToDatabase };
