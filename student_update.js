@@ -28,7 +28,6 @@ async function main(){
     if(menu==='학년'){
       console.log('학년 입력>');
       let student_grade = await Input.getUserInput();
-      //console.log(student_grade,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let updatesql = `UPDATE student SET student_grade = ? WHERE student_id = ?`;
       connection.query(updatesql, [student_grade, student_id],(err)=>{
         if (err){
@@ -41,7 +40,6 @@ async function main(){
     else if(menu==='이름'){
       console.log('이름 입력>');
       let student_name = await Input.getUserInput();
-      //console.log(student_name,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let sql = `UPDATE student SET student_name = ? WHERE student_id = ?`;
       connection.query(sql, [student_name, student_id],(err)=>{
         if (err){
@@ -54,7 +52,6 @@ async function main(){
     else if(menu==='성별'){
       console.log('성별 입력>');
       let student_sex = await Input.getUserInput();
-      //console.log(student_sex,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let sql = `UPDATE student SET student_sex = ? WHERE student_id = ?`;
       connection.query(sql, [student_sex, student_id],(err)=>{
         if (err){
@@ -67,7 +64,6 @@ async function main(){
     else if(menu==='주소'){
       console.log('주소 입력>');
       let student_address = await Input.getUserInput();
-      //console.log(student_address,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let sql = `UPDATE student SET student_address = ? WHERE student_id = ?`;
       connection.query(sql, [student_address, student_id],(err)=>{
         if (err){
@@ -80,7 +76,6 @@ async function main(){
     else if(menu==='상황'){
       console.log('학적상황 입력>');
       let student_status = await Input.getUserInput();
-      //console.log(student_status,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let sql = `UPDATE student SET student_status = ? WHERE student_id = ?`;
       connection.query(sql, [student_status, student_id],(err)=>{
         if (err){
@@ -93,7 +88,6 @@ async function main(){
     else if(menu==='연락처'){
       console.log('연락처 입력>');
       let student_number = await Input.getUserInput();
-      //console.log(student_number,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let sql = `UPDATE student SET student_number = ? WHERE student_id = ?`;
       connection.query(sql, [student_number, student_id],(err)=>{
         if (err){
@@ -106,7 +100,6 @@ async function main(){
     else if(menu==='단과대학'){
       console.log('단과대학 입력>');
       let student_college = await Input.getUserInput();
-      //console.log(student_college,student_id); //값이 잘 입력됐는지 확인(임시코드)
       let sql = `UPDATE student SET student_college = ? WHERE student_id = ?`;
       connection.query(sql, [student_college, student_id],(err)=>{
         if (err){
@@ -122,9 +115,9 @@ async function main(){
     await wait(1000);
     connection.end();
     process.exit();
-  };//while end
+  };
   
-}//main end
+}
 
 main();
 
