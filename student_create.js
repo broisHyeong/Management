@@ -101,14 +101,14 @@ async function student_number(){
 
 //학생정보생성
 async function addStudentToDatabase(){
-    const s_id = await student_id();
-    const m_id = await major_id();
-    const grade = await student_grade();
-    const name = await student_name();
-    const sex = await student_sex();
-    const address = await student_address();
-    const status = await student_status();
-    const number = await student_number();
+    let s_id = await student_id();
+    let m_id = await major_id();
+    let grade = await student_grade();
+    let name = await student_name();
+    let sex = await student_sex();
+    let address = await student_address();
+    let status = await student_status();
+    let number = await student_number();
 
     let sql = `INSERT INTO student(student_id, major_id, student_grade, student_name, student_sex, student_address, student_status, student_number, student_college, completed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, false)`;
     connection.query(sql,[s_id, m_id.major_id, grade, name, sex, address, status, number, m_id.college], (error, results) =>{
