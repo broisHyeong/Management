@@ -4,7 +4,13 @@ let read = require("./read");
 let lectureUpdate = require("./lecture_update");
 let studentUpdate = require("./student_update");
 let professorUpdate = require("./professor_update");
-let findStudent = require("./apply");
+let apply = require("./apply");
+// let lectureCreate = require("./lecture_create");
+// let professorCreate = require("./professor_create");
+// let studentCreate = require("./student_create");
+// let professorDelete = require("./professor_delete");
+// let lectureDelete = require("./lecture_delete");
+// let studentDelete = require("./student_delete");
 
 let korTable = ["학생", "강의", "교수"];
 let engTable = ["student", "lecture", "professor"];
@@ -39,9 +45,10 @@ async function main() {
             );
             let funct = await Input.getUserInput(); //사용할 기능
             if (funct == "1") {
-              //추가하기
-              //create();
-              console.log("create done");
+              if (table == "1") await studentCreate.main();
+              else if (table == "2") await lectureCreate.main();
+              else if (table == "3") await professorCreate.main();
+              else console.log("error");
             } else if (funct == "2") {
               //검색하기
               console.log(`검색할 ${korTable[table - 1]}번호를 입력해주세요`);
@@ -62,9 +69,10 @@ async function main() {
             } else if (funct == "5") {
               //삭제하기
               console.log(`삭제할 ${korTable[table - 1]}번호를 입력해주세요`);
-              let deleteId = await Input.getUserInput();
-              // delete();
-              console.log("delete done");
+              if (table == "1") await studentDelete.main();
+              else if (table == "2") await lectureDelete.main();
+              else if (table == "3") await professorDelete.main();
+              else console.log("error");
             } else if (funct == "6") {
               //뒤로가기
               await wait(500);
@@ -91,7 +99,7 @@ async function main() {
       console.log(`수강신청을 위한 학번을 입력하십시오`);
       while (true) {
         let studentId = await Input.getUserInput();
-        let studentName = await findStudent.findStudentName(studentId);
+        let studentName = await apply.findStudentName(studentId);
         if (studentName) {
           console.log(`반갑습니다 ${studentName}님`);
           break;
