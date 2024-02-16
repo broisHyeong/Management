@@ -28,10 +28,10 @@ function list(table, condition) {
     let sql;
     if (!condition) {
       sql = `SELECT ${table}_id,${table}_name FROM ${table}`;
-      console.log("* 학생 목록 *");
+      console.log(`* ${table} 목록 *`);
     } else {
       sql = `SELECT ${table}_id,${table}_name FROM ${table} where ${condition}`;
-      console.log(`* ${condition}을 만족하는 학생 목록 *`);
+      console.log(`* ${condition}을 만족하는 ${table} 목록 *`);
     }
     sqlQuery(sql)
       .then((results) => {

@@ -17,8 +17,10 @@ function findStudentName(studentId) {
         reject(error);
         return;
       }
-      const result = results[0].student_name;
-      resolve(result);
+      if (results && results.length > 0) {
+        const result = results[0].student_name;
+        resolve(result);
+      } else resolve(false);
     });
   });
 }
