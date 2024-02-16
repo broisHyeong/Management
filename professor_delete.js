@@ -20,7 +20,7 @@ async function main(){
   //while문으로 반복실행
   while (exist) {
     //교수번호입력
-    console.log(`삭제할 교수님의 등록번호를 입력하세요`);
+    // console.log(`삭제할 교수님의 등록번호를 입력하세요`);
     professor_id = await Input.getUserInput();
     let selectsql = `SELECT * FROM professor WHERE professor_id = ?`;
 
