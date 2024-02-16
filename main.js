@@ -58,15 +58,19 @@ async function main() {
                 if (listId == "취소") break;
                 if (isNaN(listId)) {
                   console.log(
-                    "학번은 숫자로만 입력해주십시오. 취소하시려면 '취소'를 입력해주십시오."
+                    `${
+                      korTable[table - 1]
+                    }번호는 숫자로만 입력해주십시오. 취소하시려면 '취소'를 입력해주십시오.`
                   );
                 } else {
                   let readResult = await read.read(engTable[table - 1], listId);
                   if (readResult) {
+                    // 해당 table에 id가 존재하는 case
                     console.log(`* ${korTable[table - 1]} 정보 *`);
                     console.log(readResult);
                     break;
-                  } else
+                  } // 해당 table에 id가 존재하지 않는 case
+                  else
                     console.log(
                       `올바른 ${
                         korTable[table - 1]
@@ -77,7 +81,7 @@ async function main() {
             } else if (funct == "3") {
               //확인하기
               console.log(
-                `검색할 조건을 입력해주세요. 조건이 없다면 엔터를 입력해주세요`
+                `검색할 조건을 mysql query문으로 입력해주세요. 조건이 없다면 엔터를 입력해주세요`
               );
               let readCondition = await Input.getUserInput();
               await read.search(engTable[table - 1], readCondition);
