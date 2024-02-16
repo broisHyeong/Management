@@ -8,13 +8,13 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-function search(table, id) {
+function read(table, id) {
   return new Promise((resolve, reject) => {
     let sql = `SELECT * FROM ${table} where ${table}_id = ${id}`;
     sqlQuery(sql)
       .then((results) => {
-        console.log(results);
-        resolve(results);
+        if (results && results.length > 0) resolve(results);
+        else resolve(false);
       })
       .catch((error) => {
         reject(error);
@@ -22,7 +22,7 @@ function search(table, id) {
   });
 }
 
-function list(table, condition) {
+function search(table, condition) {
   //condition은 조건문
   return new Promise((resolve, reject) => {
     let sql;
@@ -56,4 +56,4 @@ function sqlQuery(sql) {
   });
 }
 
-module.exports = { search, list };
+module.exports = { read, search };

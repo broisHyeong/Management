@@ -34,8 +34,10 @@ function findLectureName(lectureId) {
         reject(error);
         return;
       }
-      const result = results[0].lecture_name;
-      resolve(result);
+      if (results && results.length > 0) {
+        const result = results[0].lecture_name;
+        resolve(result);
+      } else resolve(false);
     });
   });
 }
@@ -46,9 +48,9 @@ function checkStudentLectureExist(studentId, lectureId) {
     sqlQuery(sql)
       .then((results) => {
         if (results && results.length > 0) {
-          resolve(1);
+          resolve(true);
         } else {
-          resolve(0);
+          resolve(false);
         }
       })
       .catch((error) => {
@@ -59,35 +61,28 @@ function checkStudentLectureExist(studentId, lectureId) {
 
 async function applyingLecture(studentId, lectureId) {
   isExist = await checkStudentLectureExist(studentId, lectureId);
-  if (isExist) {
-    console.log(
-      `${await findLectureName(
-        lectureId
-      )} 과목은 이미 수강 신청이 완료 되었습니다.`
-    );
+  let lectureName = await findLectureName(lectureId);
+  if (!lectureName) {
+    console.log("존재하지 않는 과목번호 입니다.");
+    return;
+  } else if (isExist) {
+    console.log(`${lectureName} 과목은 이미 수강 신청이 완료 되었습니다.`);
   } else {
     sql = `INSERT INTO STUDENT_LECTURE VALUES (${studentId},${lectureId},NULL,NULL)`;
     sqlQuery(sql);
-    console.log(
-      `${await findLectureName(lectureId)} 과목의 수강 신청이 완료 되었습니다.`
-    );
+    console.log(`${lectureName} 과목의 수강 신청이 완료 되었습니다.`);
   }
 }
 
 async function cancelApplyingLecture(studentId, lectureId) {
   isExist = await checkStudentLectureExist(studentId, lectureId);
-  if (!isExist) {
-    console.log(
-      `${await findLectureName(
-        lectureId
-      )} 과목은 수강 신청 목록에 존재하지 않습니다.`
-    );
+  let lectureName = await findLectureName(lectureId);
+  if (!lectureName || !isExist) {
+    console.log(`수강 신청 목록에 존재하지 않는 과목번호입니다.`);
   } else {
     sql = `DELETE FROM STUDENT_LECTURE WHERE STUDENT_ID = ${studentId} AND LECTURE_ID = ${lectureId}`;
     sqlQuery(sql);
-    console.log(
-      `${await findLectureName(lectureId)} 과목의 수강 취소가 완료 되었습니다.`
-    );
+    console.log(`${lectureName} 과목의 수강 취소가 완료 되었습니다.`);
   }
 }
 

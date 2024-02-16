@@ -46,21 +46,41 @@ async function main() {
             );
             let funct = await Input.getUserInput(); //사용할 기능
             if (funct == "1") {
-              if (table == "1") await studentCreate.main();
-              else if (table == "2") await lectureCreate.main();
-              else if (table == "3") await professorCreate.main();
+              if (table == "1") await studentCreate();
+              else if (table == "2") await lectureCreate();
+              else if (table == "3") await professorCreate();
               else console.log("error");
             } else if (funct == "2") {
               //검색하기
               console.log(`검색할 ${korTable[table - 1]}번호를 입력해주세요`);
-              let listId = await Input.getUserInput();
-              console.log("* 학생정보 *");
-              await read.search(engTable[table - 1], listId);
+              while (true) {
+                let listId = await Input.getUserInput();
+                if (listId == "취소") break;
+                if (isNaN(listId)) {
+                  console.log(
+                    "학번은 숫자로만 입력해주십시오. 취소하시려면 '취소'를 입력해주십시오."
+                  );
+                } else {
+                  let readResult = await read.read(engTable[table - 1], listId);
+                  if (readResult) {
+                    console.log(`* ${korTable[table - 1]} 정보 *`);
+                    console.log(readResult);
+                    break;
+                  } else
+                    console.log(
+                      `올바른 ${
+                        korTable[table - 1]
+                      }번호를 입력해주세요. 취소하시려면 '취소'를 입력해주십시오.`
+                    );
+                }
+              }
             } else if (funct == "3") {
               //확인하기
-              console.log(`검색할 조건을 입력해주세요`);
+              console.log(
+                `검색할 조건을 입력해주세요. 조건이 없다면 엔터를 입력해주세요`
+              );
               let readCondition = await Input.getUserInput();
-              await read.list(engTable[table - 1], readCondition);
+              await read.search(engTable[table - 1], readCondition);
             } else if (funct == "4") {
               //업데이트하기
               if (table == "1") await studentUpdate();
@@ -70,9 +90,9 @@ async function main() {
             } else if (funct == "5") {
               //삭제하기
               console.log(`삭제할 ${korTable[table - 1]}번호를 입력해주세요`);
-              if (table == "1") await studentDelete.main();
-              else if (table == "2") await lectureDelete.main();
-              else if (table == "3") await professorDelete.main();
+              if (table == "1") await studentDelete();
+              else if (table == "2") await lectureDelete();
+              else if (table == "3") await professorDelete();
               else console.log("error");
             } else if (funct == "6") {
               //뒤로가기
@@ -102,17 +122,24 @@ async function main() {
       let studentName;
       while (true) {
         studentId = await Input.getUserInput();
+        if (studentId == "취소") break;
         if (isNaN(studentId)) {
-          console.log("학번은 숫자로만 입력해주십시오.");
+          console.log(
+            "학번은 숫자로만 입력해주십시오. 취소하시려면 '취소'를 입력해주십시오."
+          );
         } else {
           studentName = await apply.findStudentName(studentId);
           if (studentName) {
             console.log(`반갑습니다 ${studentName}님`);
             break;
-          } else console.log(`학번을 다시 한 번 확인해주십시오`);
+          } else
+            console.log(
+              `학번을 다시 한 번 확인해주십시오. 취소하시려면 '취소'를 입력해주십시오.`
+            );
         }
       }
       while (true) {
+        if (!studentName) break;
         await wait(500);
         console.log(
           `1.수강신청하기 2.수강취소하기 3.수강내역 확인하기 4.뒤로가기`
@@ -123,12 +150,16 @@ async function main() {
           //수강신청()
           console.log("수강신청할 과목번호를 입력해주세요");
           let lectureId = await Input.getUserInput();
-          await apply.applyingLecture(studentId, lectureId);
+          if (isNaN(lectureId))
+            console.log("과목번호는 숫자로만 입력해주십시오.");
+          else await apply.applyingLecture(studentId, lectureId);
         } else if (studentFunct == "2") {
           //수강취소()
           console.log("수강 취소할 과목번호를 입력해주세요");
           let lectureId = await Input.getUserInput();
-          await apply.cancelApplyingLecture(studentId, lectureId);
+          if (isNaN(lectureId))
+            console.log("과목번호는 숫자로만 입력해주십시오.");
+          else await apply.cancelApplyingLecture(studentId, lectureId);
         } else if (studentFunct == "3") {
           //수강내역()
           console.log(`* ${studentName}님의 수강신청 내역 *`);
