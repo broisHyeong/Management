@@ -9,12 +9,42 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-//강의번호입력
-async function lecture_id() {
-  console.log("강의번호 입력>");
-  let lecture_id = await Input.getUserInput();
-  return lecture_id;
+async function main(){
+
+  let exist = true;
+  let lecture_id;
+
+//while 문으로 반복 실행
+    while (exist){
+      //교수번호 입력
+        console.log('추가할 강의의 등록번호를 입력하세요'); 
+        lecture_id = await Input.getUserInput();
+        let selectsql = `SELECT * FROM lecture WHERE lecture_id = ?`;
+      //입력된 교수번호가 테이블에 있는지 확인
+      try {
+        // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
+        const results = await new Promise((resolve, reject) => {
+            connection.query(selectsql, [lecture_id], (selectErr, queryResults) => {
+                if (selectErr) {
+                    console.log(selectErr.message);
+                    reject(selectErr);
+                } else {
+                    resolve(queryResults);
+                }
+            });
+        });
+
+        // 교수번호가 있으면 다시 입력하도록 함
+        if (results.length !== 0) {
+          console.log(`입력한 강의번호 ${lecture_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
+      } else {
+          exist = false;
+      }
+  } catch (error) {
+      console.error("오류:", error);
+  }
 }
+
 
 //강의명 입력
 async function lecture_name() {
@@ -130,9 +160,8 @@ function getMajorList() {
   });
 }
 
-async function addLectureToDatabase() {
-  try {
-    let id = await lecture_id();
+// 신규강의 생성
+    let id = lecture_id;
     let name = await lecture_name();
     let day = await lecture_day();
     let time = await lecture_time();
@@ -143,30 +172,23 @@ async function addLectureToDatabase() {
 
     let sql =
       "INSERT INTO lecture(lecture_id, lecture_name, lecture_day, lecture_time, lecture_credit, professor_id, lecture_type, major_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    connection.query(
-      sql,
-      [id, name, day, time, credit, p_id, type, m_id],
-      (error, results) => {
-        if (error) {
-          console.error("Error inserting lecture:", error);
-        } else {
-          console.log("Lecture information inserted successfully.");
-        }
-      }
-    );
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
+    
+      try {
+        // 비동기 작업이 완료되기 전까지 기다리기 위해 쿼리에 await 추가
+        await new Promise((resolve, reject) => {
+            connection.query(sql, [id, name, day, time, credit, p_id, type, m_id], (error, results) => {
+                if (error) {
+                    console.error("신규강의 삽입 중 오류:", error);
+                    reject(error);
+                } else {
+                    console.log("신규강의 정보가 성공적으로 삽입되었습니다.");
+                    resolve(results);
+                }
+            });
+        });
+    } catch (error) {
+        console.error("오류:", error);
+    }
+    }// main end
 
-function main() {
-  addLectureToDatabase()
-    .then(() => {
-      console.log("Main 함수 실행 중...");
-    })
-    .catch((error) => {
-      console.log("Main 에러 발생 : ", error);
-    });
-}
-
-module.exports = { addLectureToDatabase };
+module.exports = { main };
