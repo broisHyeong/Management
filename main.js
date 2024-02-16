@@ -28,7 +28,7 @@ async function main() {
   connection.connect();
   console.log(`반갑습니다 학적관리 프로그램에 오신 것을 환영합니다.`);
   while (true) {
-    console.log(`* 로그인 * 1.관리자 권한 2.학부생 3.종료`);
+    console.log(`* 로그인 * 1.관리자 2.학부생 3.종료`);
     let user = await Input.getUserInput();
     console.clear();
     if (user == "1") {
@@ -63,9 +63,9 @@ async function main() {
               await read.list(engTable[table - 1], readCondition);
             } else if (funct == "4") {
               //업데이트하기
-              if (table == "1") await studentUpdate.main();
-              else if (table == "2") await lectureUpdate.main();
-              else if (table == "3") await professorUpdate.main();
+              if (table == "1") await studentUpdate();
+              else if (table == "2") await lectureUpdate();
+              else if (table == "3") await professorUpdate();
               else console.log("error");
             } else if (funct == "5") {
               //삭제하기
@@ -102,11 +102,15 @@ async function main() {
       let studentName;
       while (true) {
         studentId = await Input.getUserInput();
-        studentName = await apply.findStudentName(studentId);
-        if (studentName) {
-          console.log(`반갑습니다 ${studentName}님`);
-          break;
-        } else console.log(`학번을 다시 한 번 확인해주십시오`);
+        if (isNaN(studentId)) {
+          console.log("학번은 숫자로만 입력해주십시오.");
+        } else {
+          studentName = await apply.findStudentName(studentId);
+          if (studentName) {
+            console.log(`반갑습니다 ${studentName}님`);
+            break;
+          } else console.log(`학번을 다시 한 번 확인해주십시오`);
+        }
       }
       while (true) {
         await wait(500);
@@ -152,5 +156,3 @@ main();
 
 const wait = (timeToDelay) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
-
-module.exports = { main, connection };
