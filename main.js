@@ -56,7 +56,7 @@ async function main() {
               while (true) {
                 let listId = await Input.getUserInput();
                 if (listId == "취소") break;
-                if (isNaN(listId)) {
+                if (isNaN(listId) || listId == "") {
                   console.log(
                     `${
                       korTable[table - 1]
@@ -132,7 +132,7 @@ async function main() {
             "학번은 숫자로만 입력해주십시오. 취소하시려면 '취소'를 입력해주십시오."
           );
         } else {
-          studentName = await apply.findStudentName(studentId);
+          studentName = await apply.findName("student", studentId);
           if (studentName) {
             console.log(`반갑습니다 ${studentName}님`);
             break;
