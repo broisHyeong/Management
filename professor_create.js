@@ -74,7 +74,7 @@ async function main() {
             });
         });
     
-        // 학생번호가 있으면 다시 입력하도록 함
+        // 교수의 전화번호가 있으면 다시 입력하도록 함
         if (results.length !== 0) {
             console.log(`입력한 교수의 연락처 ${professor_tel}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
         } else {
