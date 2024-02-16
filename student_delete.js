@@ -20,7 +20,7 @@ async function main(){
   //while문으로 반복실행
   while (exist) {
     //학번입력
-    console.log(`삭제할 학번을 입력하세요`);
+    // console.log(`삭제할 학번을 입력하세요`);
     student_id = await Input.getUserInput();
     let selectsql = `SELECT * FROM student WHERE student_id = ?`;
 
