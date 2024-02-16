@@ -28,20 +28,21 @@ function search(table, condition) {
   return new Promise((resolve, reject) => {
     let sql;
     if (!condition) sql = `SELECT ${table}_id,${table}_name FROM ${table}`;
-    else
+    else {
       sql = `SELECT ${table}_id,${table}_name FROM ${table} where ${condition}`;
-    sqlQuery(sql)
-      .then((results) => {
-        if (!condition) console.log(`* 전체 ${table} 목록 *`);
-        else console.log(`* ${condition}을 만족하는 ${table} 목록 *`);
-        console.log(results);
-        resolve(results);
-      })
-      .catch((error) => {
-        //reject(error);
-        console.log("유효하지 않은 입력입니다.");
-        resolve(error);
-      });
+      sqlQuery(sql)
+        .then((results) => {
+          if (!condition) console.log(`* 전체 ${table} 목록 *`);
+          else console.log(`* ${condition}을 만족하는 ${table} 목록 *`);
+          console.log(results);
+          resolve(results);
+        })
+        .catch((error) => {
+          //reject(error);
+          console.log("유효하지 않은 입력입니다.");
+          reject(error);
+        });
+    }
   });
 }
 

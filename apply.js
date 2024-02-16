@@ -8,9 +8,10 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-function findStudentName(studentId) {
+function findName(table, id) {
   return new Promise((resolve, reject) => {
-    sql = `SELECT student_name FROM student where student_id = ${studentId}`;
+    sql = `SELECT ${table}_name FROM ${table} where ${table}_id = ${id};`;
+    console.log(sql);
     connection.query(sql, [true], (error, results, fields) => {
       if (error) {
         console.error(error.message);
@@ -18,24 +19,9 @@ function findStudentName(studentId) {
         return;
       }
       if (results && results.length > 0) {
-        const result = results[0].student_name;
-        resolve(result);
-      } else resolve(false);
-    });
-  });
-}
-
-function findLectureName(lectureId) {
-  return new Promise((resolve, reject) => {
-    sql = `SELECT lecture_name FROM lecture where lecture_id = ${lectureId}`;
-    connection.query(sql, [true], (error, results, fields) => {
-      if (error) {
-        console.error(error.message);
-        reject(error);
-        return;
-      }
-      if (results && results.length > 0) {
-        const result = results[0].lecture_name;
+        let result;
+        if (table == "student") result = results[0].student_name;
+        else result = results[0].lecture_name;
         resolve(result);
       } else resolve(false);
     });
@@ -61,7 +47,8 @@ function checkStudentLectureExist(studentId, lectureId) {
 
 async function applyingLecture(studentId, lectureId) {
   isExist = await checkStudentLectureExist(studentId, lectureId);
-  let lectureName = await findLectureName(lectureId);
+  let lectureName = await findName("lecture", lectureId);
+  console.log(lectureName);
   if (!lectureName) {
     console.log("존재하지 않는 과목번호 입니다.");
     return;
@@ -76,7 +63,7 @@ async function applyingLecture(studentId, lectureId) {
 
 async function cancelApplyingLecture(studentId, lectureId) {
   isExist = await checkStudentLectureExist(studentId, lectureId);
-  let lectureName = await findLectureName(lectureId);
+  let lectureName = await findName("lecture", lectureId);
   if (!lectureName || !isExist) {
     console.log(`수강 신청 목록에 존재하지 않는 과목번호입니다.`);
   } else {
@@ -113,7 +100,7 @@ function sqlQuery(sql) {
 }
 
 module.exports = {
-  findStudentName,
+  findName,
   applyingLecture,
   cancelApplyingLecture,
   readApplyingLecture,
