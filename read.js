@@ -40,7 +40,7 @@ function search(table, condition) {
       .catch((error) => {
         //reject(error);
         console.log("유효하지 않은 입력입니다.");
-        reject(error);
+        resolve(error);
       });
   });
 }
