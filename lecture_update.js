@@ -11,7 +11,7 @@ let connection = mysql.createConnection({
 });
 
 async function main() {
-  connection.connect();
+  // connection.connect();
 
   let exist = true;
   let lecture_id;
@@ -110,7 +110,12 @@ async function main() {
 
       //전공 수정
       case "전공":
-        console.log("전공 입력>");
+        const majors = await getMajorList();
+        console.log("Major list:");
+        majors.forEach((major) => {
+        console.log(`-${major.major_name}`);
+        });
+        console.log("전공을 두글자로 입력해주세요 ex)컴퓨터공학->컴공");
         let lecture_type = await Input.getUserInput();
         updatesql = `UPDATE lecture SET lecture_type = ? WHERE lecture_id = ?`;
         connection.query(updatesql, [lecture_type, lecture_id], (err) => {
@@ -131,6 +136,20 @@ async function main() {
   await wait(1000);
 } //main end
 
+// 데이터베이스에서 전공 목록을 가져오는 함수
+function getMajorList() {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT DISTINCT major_name FROM major";
+    connection.query(sql, (error, results) => {
+      if (error) {
+        console.error("전공 목록을 가져오는 중 오류 발생:", error);
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
 const wait = (timeToDelay) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
 

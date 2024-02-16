@@ -8,9 +8,9 @@ let apply = require("./apply");
 let lectureCreate = require("./lecture_create");
 let professorCreate = require("./professor_create");
 let studentCreate = require("./student_create");
-// let professorDelete = require("./professor_delete");
-// let lectureDelete = require("./lecture_delete");
-// let studentDelete = require("./student_delete");
+let professorDelete = require("./professor_delete");
+let lectureDelete = require("./lecture_delete");
+let studentDelete = require("./student_delete");
 
 let korTable = ["학생", "강의", "교수"];
 let engTable = ["student", "lecture", "professor"];

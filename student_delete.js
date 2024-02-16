@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
 });
 
 async function main(){
-  connection.connect();
+  // connection.connect();
 
   let exist = true;
   let student_id;
