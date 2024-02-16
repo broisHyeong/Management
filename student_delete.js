@@ -11,8 +11,13 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
+<<<<<<< HEAD
 async function main() {
   connection.connect();
+=======
+async function main(){
+  // connection.connect();
+>>>>>>> origin/main
 
   let exist = true;
   let student_id;
