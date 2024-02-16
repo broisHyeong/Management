@@ -10,116 +10,122 @@ let connection = mysql.createConnection({
 });
 
 async function main() {
+  let exist = true;
+  let professor_id;
 
-    let exist = true;
-    let professor_id;
+  //while 문으로 반복 실행
+  while (exist) {
+    //교수번호 입력
+    console.log("추가할 교수의 등록번호를 입력하세요");
+    professor_id = await Input.getUserInput();
+    let selectsql = `SELECT * FROM professor WHERE professor_id = ?`;
+    //입력된 교수번호가 테이블에 있는지 확인
+    try {
+      // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
+      const results = await new Promise((resolve, reject) => {
+        connection.query(
+          selectsql,
+          [professor_id],
+          (selectErr, queryResults) => {
+            if (selectErr) {
+              console.log(selectErr.message);
+              reject(selectErr);
+            } else {
+              resolve(queryResults);
+            }
+          }
+        );
+      });
 
-    //while 문으로 반복 실행
-    while (exist){
-      //교수번호 입력
-        console.log('추가할 교수의 등록번호를 입력하세요'); 
-        professor_id = await Input.getUserInput();
-        let selectsql = `SELECT * FROM professor WHERE professor_id = ?`;
-      //입력된 교수번호가 테이블에 있는지 확인
-      try {
-        // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
-        const results = await new Promise((resolve, reject) => {
-            connection.query(selectsql, [professor_id], (selectErr, queryResults) => {
-                if (selectErr) {
-                    console.log(selectErr.message);
-                    reject(selectErr);
-                } else {
-                    resolve(queryResults);
-                }
-            });
-        });
-
-        // 교수번호가 있으면 다시 입력하도록 함
-        if (results.length !== 0) {
-            console.log(`입력한 교수번호 ${professor_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
-        } else {
-            exist = false;
-        }
+      // 교수번호가 있으면 다시 입력하도록 함
+      if (results.length !== 0) {
+        console.log(
+          `입력한 교수번호 ${professor_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`
+        );
+      } else {
+        exist = false;
+      }
     } catch (error) {
-        console.error("오류:", error);
+      console.error("오류:", error);
     }
   }
 
-    //이름 입력
-    async function professor_name() {
-      console.log("이름입력>");
-      let professor_name = await Input.getUserInput();
-      return professor_name;
-    }
+  //이름 입력
+  async function professor_name() {
+    console.log("이름입력>");
+    let professor_name = await Input.getUserInput();
+    return professor_name;
+  }
 
-    //연락처 입력
-    async function professor_tel() {
-      console.log("연락처 입력>");
-      let professor_tel = await Input.getUserInput();
-      return professor_tel;
-    }
+  //연락처 입력
+  async function professor_tel() {
+    console.log("연락처 입력>");
+    let professor_tel = await Input.getUserInput();
+    return professor_tel;
+  }
 
-    //전공선택
-    async function professor_major() {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const majors = await getMajorList();
+  //전공선택
+  async function professor_major() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const majors = await getMajorList();
 
-          console.log("Major List:");
-          majors.forEach((major, index) => {
-            console.log(`${index + 1}. ${major.college} - ${major.major_name}`);
-          });
+        console.log("Major List:");
+        majors.forEach((major, index) => {
+          console.log(`${index + 1}. ${major.college} - ${major.major_name}`);
+        });
 
-          console.log("전공번호 선택:");
-          let selectedMajorIndex = await Input.getUserInput();
+        console.log("전공번호 선택:");
+        let selectedMajorIndex = await Input.getUserInput();
 
-          resolve(majors[selectedMajorIndex - 1].major_name);
-        } catch (error) {
-          console.error("Error fetching majors:", error);
+        resolve(majors[selectedMajorIndex - 1].major_name);
+      } catch (error) {
+        console.error("Error fetching majors:", error);
+        reject(error);
+      }
+    });
+  }
+
+  // 데이터베이스에서 전공 목록을 가져오는 함수
+  function getMajorList() {
+    return new Promise((resolve, reject) => {
+      const sql = "SELECT major_id, college, major_name FROM major";
+      connection.query(sql, (error, results) => {
+        if (error) {
+          console.error("전공 목록을 가져오는 중 오류 발생:", error);
           reject(error);
+        } else {
+          resolve(results);
         }
       });
-    }
+    });
+  }
 
-    // 데이터베이스에서 전공 목록을 가져오는 함수
-    function getMajorList() {
-      return new Promise((resolve, reject) => {
-        const sql = "SELECT major_id, college, major_name FROM major";
-        connection.query(sql, (error, results) => {
-          if (error) {
-            console.error("전공 목록을 가져오는 중 오류 발생:", error);
-            reject(error);
-          } else {
-            resolve(results);
-          }
-        });
-      });
-    }
-
-//교수정보생성
+  //교수정보생성
   let id = professor_id;
   let name = await professor_name();
   let tel = await professor_tel();
   let major = await professor_major();
 
-  let sql = "INSERT INTO professor(professor_id, professor_name, professor_tel, professor_major) VALUES(?, ?, ?, ?)";
-  
+  let sql =
+    "INSERT INTO professor(professor_id, professor_name, professor_tel, professor_major) VALUES(?, ?, ?, ?)";
+
   try {
     // 비동기 작업이 완료되기 전까지 기다리기 위해 쿼리에 await 추가
     await new Promise((resolve, reject) => {
-        connection.query(sql, [id, name, tel, major], (error, results) => {
-            if (error) {
-                console.error("신규교수 삽입 중 오류:", error);
-                reject(error);
-            } else {
-                console.log("교수 정보가 성공적으로 삽입되었습니다.");
-                resolve(results);
-            }
-        });
+      connection.query(sql, [id, name, tel, major], (error, results) => {
+        if (error) {
+          console.error("신규교수 삽입 중 오류:", error);
+          reject(error);
+        } else {
+          console.log("교수 정보가 성공적으로 삽입되었습니다.");
+          resolve(results);
+        }
+      });
     });
-} catch (error) {
+  } catch (error) {
     console.error("오류:", error);
-}
-}// main end
+  }
+} // main end
 
-module.exports = { main };
+module.exports = main;
