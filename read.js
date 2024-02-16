@@ -8,29 +8,51 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-async function search(table, id) {
-  let sql = `SELECT * FROM ${table} where ${table}_id = ${id}`;
-  await sqlQuery(sql);
+function search(table, id) {
+  return new Promise((resolve, reject) => {
+    let sql = `SELECT * FROM ${table} where ${table}_id = ${id}`;
+    sqlQuery(sql)
+      .then((results) => {
+        console.log(results);
+        resolve(results);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
-async function list(table, condition) {
+function list(table, condition) {
   //condition은 조건문
-  let sql;
-  if (condition == "" || isNull(condition)) {
-    sql = `SELECT ${table}_id,${table}_name FROM ${table}`;
-    await sqlQuery(sql);
-    console.log("* 학생 목록 *");
-  } else {
-    sql = `SELECT ${table}_id,${table}_name FROM ${table} where ${condition}`;
-    await sqlQuery(sql);
-    console.log(`* ${readCondition}을 만족하는 학생 목록 *`);
-  }
+  return new Promise((resolve, reject) => {
+    let sql;
+    if (!condition) {
+      sql = `SELECT ${table}_id,${table}_name FROM ${table}`;
+      console.log("* 학생 목록 *");
+    } else {
+      sql = `SELECT ${table}_id,${table}_name FROM ${table} where ${condition}`;
+      console.log(`* ${condition}을 만족하는 학생 목록 *`);
+    }
+    sqlQuery(sql)
+      .then((results) => {
+        console.log(results);
+        resolve(results);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 function sqlQuery(sql) {
-  connection.query(sql, [true], (error, results, fields) => {
-    if (error) return console.error(error.message);
-    console.log(results);
+  return new Promise((resolve, reject) => {
+    connection.query(sql, [true], (error, results, fields) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(results);
+    });
   });
 }
 
