@@ -28,7 +28,7 @@ async function main() {
   connection.connect();
   console.log(`반갑습니다 학적관리 프로그램에 오신 것을 환영합니다.`);
   while (true) {
-    console.log(`* 로그인 * 1.관리자 권한 2.학부생`);
+    console.log(`* 로그인 * 1.관리자 권한 2.학부생 3.종료`);
     let user = await Input.getUserInput();
     console.clear();
     if (user == "1") {
@@ -38,6 +38,7 @@ async function main() {
         console.clear();
         if (table == "1" || table == "2" || table == "3") {
           while (true) {
+            await wait(500);
             console.log(
               `* ${
                 korTable[table - 1]
@@ -97,35 +98,37 @@ async function main() {
     } // user == 1
     else if (user == 2) {
       console.log(`수강신청을 위한 학번을 입력하십시오`);
+      let studentId;
+      let studentName;
       while (true) {
-        let studentId = await Input.getUserInput();
-        let studentName = await apply.findStudentName(studentId);
+        studentId = await Input.getUserInput();
+        studentName = await apply.findStudentName(studentId);
         if (studentName) {
           console.log(`반갑습니다 ${studentName}님`);
           break;
-        } else {
-          console.log(`학번을 다시 한 번 확인해주십시오`);
-        }
+        } else console.log(`학번을 다시 한 번 확인해주십시오`);
       }
       while (true) {
+        await wait(500);
         console.log(
           `1.수강신청하기 2.수강취소하기 3.수강내역 확인하기 4.뒤로가기`
         );
         let studentFunct = await Input.getUserInput();
         console.clear();
         if (studentFunct == "1") {
+          //수강신청()
           console.log("수강신청할 과목번호를 입력해주세요");
           let lectureId = await Input.getUserInput();
-          //수강신청()
-          console.log("수강신청완료");
+          await apply.applyingLecture(studentId, lectureId);
         } else if (studentFunct == "2") {
+          //수강취소()
           console.log("수강 취소할 과목번호를 입력해주세요");
           let lectureId = await Input.getUserInput();
-          //수강취소()
-          console.log("수강내역 취소");
+          await apply.cancelApplyingLecture(studentId, lectureId);
         } else if (studentFunct == "3") {
           //수강내역()
-          console.log("수강내역 확인");
+          console.log(`* ${studentName}님의 수강신청 내역 *`);
+          await apply.readApplyingLecture(studentId);
         } else if (studentFunct == "4") {
           await wait(500);
           console.clear();
@@ -136,6 +139,9 @@ async function main() {
           console.clear();
         }
       } // user == 2
+    } else if (user == 3) {
+      console.log("프로그램이 종료 되었습니다.");
+      process.exit();
     } else console.log("메뉴를 잘못 선택하셨습니다.");
     await wait(500);
     console.clear();
