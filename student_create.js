@@ -10,13 +10,16 @@ let connection = mysql.createConnection({
 });
 
 async function main() {
-  let exist = true;
-  let student_id;
 
-  //while 문으로 반복 실행
-  while (exist) {
-    //학생번호 입력
-    console.log("추가할 학생의 등록번호를 입력하세요");
+  let check1 = true;
+  let check2 = true;
+  let student_id;
+  let student_number;
+
+//while 문으로 반복 실행
+while (check1){
+  //학생번호 입력
+    console.log('추가할 학생의 등록번호를 입력하세요'); 
     student_id = await Input.getUserInput();
     let selectsql = `SELECT * FROM student WHERE student_id = ?`;
     //입력된 학생번호가 테이블에 있는지 확인
@@ -33,18 +36,16 @@ async function main() {
         });
       });
 
-      // 학생번호가 있으면 다시 입력하도록 함
-      if (results.length !== 0) {
-        console.log(
-          `입력한 학생번호 ${student_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`
-        );
-      } else {
-        exist = false;
-      }
-    } catch (error) {
-      console.error("오류:", error);
+    // 학생번호가 있으면 다시 입력하도록 함
+    if (results.length !== 0) {
+        console.log(`입력한 학생번호 ${student_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
+    } else {
+        check1 = false;
     }
-  }
+} catch (error) {
+    console.error("오류:", error);
+}
+}
 
   //전공번호 선택
   async function major_id() {
@@ -121,12 +122,37 @@ async function main() {
     return student_status;
   }
 
-  //연락처 입력
-  async function student_number() {
-    console.log("연락처 입력>");
-    let student_number = await Input.getUserInput();
-    return student_number;
-  }
+
+while (check2){
+  //학생전화번호 입력
+    console.log('연락처 입력>'); 
+    student_number = await Input.getUserInput();
+    let selectsql = `SELECT * FROM student WHERE student_number = ?`;
+  //입력된 학생전화번호가 테이블에 있는지 확인
+  try {
+    // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
+    const results = await new Promise((resolve, reject) => {
+        connection.query(selectsql, [student_number], (selectErr, queryResults) => {
+            if (selectErr) {
+                console.log(selectErr.message);
+                reject(selectErr);
+            } else {
+                resolve(queryResults);
+            }
+        });
+    });
+
+    // 학생번호가 있으면 다시 입력하도록 함
+    if (results.length !== 0) {
+        console.log(`입력한 학생의 연락처 ${student_number}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
+    } else {
+        check2 = false;
+    }
+} catch (error) {
+    console.error("오류:", error);
+}
+}
+
 
   //학생정보생성
   let s_id = student_id;
@@ -136,7 +162,7 @@ async function main() {
   let sex = await student_sex();
   let address = await student_address();
   let status = await student_status();
-  let number = await student_number();
+  let number = student_number;
 
   let sql = `INSERT INTO student(student_id, major_id, student_grade, student_name, student_sex, student_address, student_status, student_number, student_college) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
