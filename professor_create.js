@@ -10,41 +10,38 @@ let connection = mysql.createConnection({
 });
 
 async function main() {
-  let exist = true;
-  let professor_id;
 
-  //while 문으로 반복 실행
-  while (exist) {
-    //교수번호 입력
-    console.log("추가할 교수의 등록번호를 입력하세요");
-    professor_id = await Input.getUserInput();
-    let selectsql = `SELECT * FROM professor WHERE professor_id = ?`;
-    //입력된 교수번호가 테이블에 있는지 확인
-    try {
-      // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
-      const results = await new Promise((resolve, reject) => {
-        connection.query(
-          selectsql,
-          [professor_id],
-          (selectErr, queryResults) => {
-            if (selectErr) {
-              console.log(selectErr.message);
-              reject(selectErr);
-            } else {
-              resolve(queryResults);
-            }
-          }
-        );
-      });
+    let check1 = true;
+    let check2 = true;
+    let professor_id;
+    let professor_tel;
 
-      // 교수번호가 있으면 다시 입력하도록 함
-      if (results.length !== 0) {
-        console.log(
-          `입력한 교수번호 ${professor_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`
-        );
-      } else {
-        exist = false;
-      }
+    //while 문으로 반복 실행
+    while (check1){
+      //교수번호 입력
+        console.log('추가할 교수의 등록번호를 입력하세요'); 
+        professor_id = await Input.getUserInput();
+        let selectsql = `SELECT * FROM professor WHERE professor_id = ?`;
+      //입력된 교수번호가 테이블에 있는지 확인
+      try {
+        // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
+        const results = await new Promise((resolve, reject) => {
+            connection.query(selectsql, [professor_id], (selectErr, queryResults) => {
+                if (selectErr) {
+                    console.log(selectErr.message);
+                    reject(selectErr);
+                } else {
+                    resolve(queryResults);
+                }
+            });
+        });
+
+        // 교수번호가 있으면 다시 입력하도록 함
+        if (results.length !== 0) {
+            console.log(`입력한 교수번호 ${professor_id}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
+        } else {
+            check1 = false;
+        }
     } catch (error) {
       console.error("오류:", error);
     }
@@ -57,12 +54,36 @@ async function main() {
     return professor_name;
   }
 
-  //연락처 입력
-  async function professor_tel() {
-    console.log("연락처 입력>");
-    let professor_tel = await Input.getUserInput();
-    return professor_tel;
-  }
+// 연락처 입력 중복방지
+    while (check2){
+      //교수 전화번호 입력
+        console.log('연락처 입력>'); 
+        professor_tel = await Input.getUserInput();
+        let selectsql = `SELECT * FROM professor WHERE professor_tel = ?`;
+      //입력된 교수 전화번호가 테이블에 있는지 확인
+      try {
+        // 비동기 작업이 완료될 때까지 기다리기 위해 프로미스 사용
+        const results = await new Promise((resolve, reject) => {
+            connection.query(selectsql, [professor_tel], (selectErr, queryResults) => {
+                if (selectErr) {
+                    console.log(selectErr.message);
+                    reject(selectErr);
+                } else {
+                    resolve(queryResults);
+                }
+            });
+        });
+    
+        // 교수의 전화번호가 있으면 다시 입력하도록 함
+        if (results.length !== 0) {
+            console.log(`입력한 교수의 연락처 ${professor_tel}에 해당하는 데이터가 이미 있습니다. 다시 입력해주세요.`);
+        } else {
+            check2 = false;
+        }
+    } catch (error) {
+        console.error("오류:", error);
+    }
+    }
 
   //전공선택
   async function professor_major() {
@@ -104,7 +125,7 @@ async function main() {
   //교수정보생성
   let id = professor_id;
   let name = await professor_name();
-  let tel = await professor_tel();
+  let tel = professor_tel;
   let major = await professor_major();
 
   let sql =

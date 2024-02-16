@@ -43,7 +43,7 @@ async function main() {
   if (!exist) {
     console.log(`선택한 강의번호: ${lecture_id}`);
     console.log("수정할 항목을 입력하세요");
-    console.log("강의명/요일/시간/학점/전공");
+    console.log("강의명/요일/시간/학점/전공영역");
     let menu = await Input.getUserInput();
     let updatesql;
 
@@ -108,22 +108,17 @@ async function main() {
         });
         break;
 
-      //전공 수정
-      case "전공":
-        const majors = await getMajorList();
-        console.log("Major list:");
-        majors.forEach((major) => {
-        console.log(`-${major.major_name}`);
-        });
-        console.log("전공을 두글자로 입력해주세요 ex)컴퓨터공학->컴공");
+      //전공영역 수정
+      case "전공영역":
+        console.log("전공영역(전공/교양)>");
         let lecture_type = await Input.getUserInput();
         updatesql = `UPDATE lecture SET lecture_type = ? WHERE lecture_id = ?`;
         connection.query(updatesql, [lecture_type, lecture_id], (err) => {
           if (err) {
-            console.log("전공이 올바르게 입력되지 않았습니다");
+            console.log("영역이 올바르게 입력되지 않았습니다");
           } else {
             console.log(
-              `강의번호 ${lecture_id}의 전공이 ${lecture_type}(으)로 수정되었습니다`
+              `강의번호 ${lecture_id}의 전공영역이 ${lecture_type}(으)로 수정되었습니다`
             );
           }
         });
@@ -136,20 +131,6 @@ async function main() {
   await wait(1000);
 } //main end
 
-// 데이터베이스에서 전공 목록을 가져오는 함수
-function getMajorList() {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT DISTINCT major_name FROM major";
-    connection.query(sql, (error, results) => {
-      if (error) {
-        console.error("전공 목록을 가져오는 중 오류 발생:", error);
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
 const wait = (timeToDelay) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
 
