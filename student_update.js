@@ -11,7 +11,7 @@ let connection = mysql.createConnection({
 });
 
 async function main() {
-  connection.connect();
+  // connection.connect();
 
   let exist = true;
   let student_id;
@@ -140,6 +140,11 @@ async function main() {
 
       //단과대학 수정
       case "단과대학":
+        const majors = await getMajorList();
+        console.log("college list:");
+        majors.forEach((major) => {
+        console.log(`-${major.college}`);
+        });
         console.log("단과대학 입력>");
         let student_college = await Input.getUserInput();
         updatesql = `UPDATE student SET student_college = ? WHERE student_id = ?`;
@@ -160,6 +165,20 @@ async function main() {
   await wait(1000);
 } //main end
 
+// 데이터베이스에서 전공 목록을 가져오는 함수
+function getMajorList() {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT DISTINCT college FROM major";
+    connection.query(sql, (error, results) => {
+      if (error) {
+        console.error("전공 목록을 가져오는 중 오류 발생:", error);
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
 const wait = (timeToDelay) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
 
