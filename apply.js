@@ -11,7 +11,6 @@ let connection = mysql.createConnection({
 function findName(table, id) {
   return new Promise((resolve, reject) => {
     sql = `SELECT ${table}_name FROM ${table} where ${table}_id = ${id};`;
-    console.log(sql);
     connection.query(sql, [true], (error, results, fields) => {
       if (error) {
         console.error(error.message);
