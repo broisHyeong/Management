@@ -9,7 +9,7 @@ let connection = mysql.createConnection({
 });
 
 function read(table, id) {
-  // table에서 해당 id 값을 가진 객체 출력
+  // table에서 해당 id 값을 가진 행 출력
   return new Promise((resolve, reject) => {
     let sql = `SELECT * FROM ${table} where ${table}_id = ${id}`;
     sqlQuery(sql)
@@ -24,7 +24,7 @@ function read(table, id) {
 }
 
 function search(table, condition) {
-  //condition은 조건문
+  //condition은 조건문, table에서 조건에 해당하는 행의 id와 이름 목록을 출력
   return new Promise((resolve, reject) => {
     let sql;
     if (!condition) sql = `SELECT ${table}_id,${table}_name FROM ${table}`;

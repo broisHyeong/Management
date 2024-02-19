@@ -9,16 +9,17 @@ let connection = mysql.createConnection({
 });
 
 function findName(table, id) {
+  // id를 받아 name을 return
   return new Promise((resolve, reject) => {
     sql = `SELECT ${table}_name FROM ${table} where ${table}_id = ${id};`;
     connection.query(sql, [true], (error, results, fields) => {
       if (error) {
         console.error(error.message);
-        reject(error);
         return;
       }
       if (results && results.length > 0) {
         let result;
+        console.log(results);
         if (table == "student") result = results[0].student_name;
         else result = results[0].lecture_name;
         resolve(result);
@@ -28,6 +29,7 @@ function findName(table, id) {
 }
 
 function checkStudentLectureExist(studentId, lectureId) {
+  // studentId 수강 신청 목록에 lectureId가 존재하는지 확인
   return new Promise((resolve, reject) => {
     let sql = `select lecture_id from student_lecture where student_id = ${studentId} and lecture_id = ${lectureId}`;
     sqlQuery(sql)
@@ -45,13 +47,15 @@ function checkStudentLectureExist(studentId, lectureId) {
 }
 
 async function applyingLecture(studentId, lectureId) {
+  // 수강신청
   isExist = await checkStudentLectureExist(studentId, lectureId);
   let lectureName = await findName("lecture", lectureId);
-  console.log(lectureName);
   if (!lectureName) {
+    //lecture table에 존재하는지 확인
     console.log("존재하지 않는 과목번호 입니다.");
     return;
   } else if (isExist) {
+    //student_lecture table에 존재하는지 확인
     console.log(`${lectureName} 과목은 이미 수강 신청이 완료 되었습니다.`);
   } else {
     sql = `INSERT INTO STUDENT_LECTURE VALUES (${studentId},${lectureId},NULL,NULL)`;
@@ -64,6 +68,7 @@ async function cancelApplyingLecture(studentId, lectureId) {
   isExist = await checkStudentLectureExist(studentId, lectureId);
   let lectureName = await findName("lecture", lectureId);
   if (!lectureName || !isExist) {
+    // lecture table과 student_lecture table에 존재하는지 확인
     console.log(`수강 신청 목록에 존재하지 않는 과목번호입니다.`);
   } else {
     sql = `DELETE FROM STUDENT_LECTURE WHERE STUDENT_ID = ${studentId} AND LECTURE_ID = ${lectureId}`;
@@ -73,6 +78,7 @@ async function cancelApplyingLecture(studentId, lectureId) {
 }
 
 function readApplyingLecture(studentId) {
+  // studentId 학생의 수강신청목록 출력
   return new Promise((resolve, reject) => {
     let sql = `SELECT lecture_id FROM student_lecture where student_id = ${studentId}`;
     sqlQuery(sql)
