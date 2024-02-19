@@ -105,7 +105,7 @@ async function main() {
               break;
             } else {
               console.log("올바른 값을 입력해주세요");
-              await wait(1000);
+              await wait(500);
               console.clear();
             }
           }
@@ -115,7 +115,7 @@ async function main() {
           break;
         } else {
           console.log("올바른 값을 입력해주세요");
-          await wait(1000);
+          await wait(500);
           console.clear();
         }
       }
@@ -174,7 +174,7 @@ async function main() {
           break;
         } else {
           console.log("올바른 값을 입력해주세요");
-          await wait(1000);
+          await wait(500);
           console.clear();
         }
       } // user == 2
