@@ -18,7 +18,7 @@ function read(table, id) {
         else resolve(false);
       })
       .catch((error) => {
-        reject(error);
+        resolve();
       });
   });
 }
