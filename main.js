@@ -127,7 +127,7 @@ async function main() {
       while (true) {
         studentId = await Input.getUserInput();
         if (studentId == "취소") break;
-        if (isNaN(studentId)) {
+        if (isNaN(studentId) || studentId == "") {
           console.log(
             "학번은 숫자로만 입력해주십시오. 취소하시려면 '취소'를 입력해주십시오."
           );
@@ -154,14 +154,14 @@ async function main() {
           //수강신청()
           console.log("수강신청할 과목번호를 입력해주세요");
           let lectureId = await Input.getUserInput();
-          if (isNaN(lectureId))
+          if (isNaN(lectureId) || !lectureId)
             console.log("과목번호는 숫자로만 입력해주십시오.");
           else await apply.applyingLecture(studentId, lectureId);
         } else if (studentFunct == "2") {
           //수강취소()
           console.log("수강 취소할 과목번호를 입력해주세요");
           let lectureId = await Input.getUserInput();
-          if (isNaN(lectureId))
+          if (isNaN(lectureId) || !lectureId)
             console.log("과목번호는 숫자로만 입력해주십시오.");
           else await apply.cancelApplyingLecture(studentId, lectureId);
         } else if (studentFunct == "3") {

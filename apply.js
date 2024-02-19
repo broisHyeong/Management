@@ -14,11 +14,11 @@ function findName(table, id) {
     connection.query(sql, [true], (error, results, fields) => {
       if (error) {
         console.error(error.message);
-        reject(error);
         return;
       }
       if (results && results.length > 0) {
         let result;
+        console.log(results);
         if (table == "student") result = results[0].student_name;
         else result = results[0].lecture_name;
         resolve(result);
@@ -47,7 +47,6 @@ function checkStudentLectureExist(studentId, lectureId) {
 async function applyingLecture(studentId, lectureId) {
   isExist = await checkStudentLectureExist(studentId, lectureId);
   let lectureName = await findName("lecture", lectureId);
-  console.log(lectureName);
   if (!lectureName) {
     console.log("존재하지 않는 과목번호 입니다.");
     return;
